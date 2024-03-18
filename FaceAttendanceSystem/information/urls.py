@@ -10,5 +10,5 @@ urlpatterns = [
     # path('Attendance/', include("Attendance.urls"), name="Attendance"),
     # path('Past Class/', include("PastClass.urls"), name="PastClass"),
     path('Register/', views.Register, name="Register"),
+    path('login/', views.Login, name="Login"),
 ]
-admin.autodiscover()

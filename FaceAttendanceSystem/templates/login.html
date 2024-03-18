@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+
+{% block title %}Login{% endblock title %}
+
+{% block main %}
+<div class="wrapper rounded bg-white">
+    <div class="h3">Create an account</div>
+    <form class="form"  enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {% if warning %}
+        <div class="warning">{{ warning }}</div>
+        {% endif %}
+    <div class="col-md-12 col-lg-12 col-xl-12 d-flex px-auto">
+
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp" class="img-fluid" alt="Sample image">
+
+    </div>
+
+        <div class="row">
+            <div class="col-md-12 mt-md-0 mt-3">
+                <label for="user">User Id</label>
+                <input type="text" class="form-control" id="user" name="user" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mt-md-0 mt-3">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mt-md-0 mt-3">
+                <label for="repeatPassword">Repeat Password</label>
+                <input type="repeatPassword" class="form-control" id="repeatPassword" name="repeatPassword" required>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center ">
+            <button type="submit" class="btn btn-primary mt-3 btn-block btn-lg gradient-custom-4 ">Register</button>
+        </div>
+
+        <p class="text-center text-muted mt-5 mb-0">Have already an account? <a href="#!" class="fw-bold text-body"><u>Login here</u></a></p>
+
+    </form>
+</div>
+{% endblock main %}

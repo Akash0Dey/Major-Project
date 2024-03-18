@@ -55,18 +55,16 @@
             <div class="col-md-6 mt-md-0 mt-3">
                 <label for="CurrentSemester">Current Semester</label>
                 <select id="CurrentSemester" name="CurrentSemester" required>
-                    <option value="" selected hidden>Choose Option</option>
                     {% for S in Sem %}
-                    <option value="{{ S }}">{{ S }}</option>
+                    <option value="{{ S }}" {% if S == Sem.0 %} selected {% endif %}>{{ S }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="col-md-6 mt-md-0 mt-3">
                 <label for="Major">Major</label>
                 <select id="Major" name="Major" required>
-                    <option value="" selected hidden>Choose Option</option>
                     {% for D in Dept %}
-                    <option value="{{ D }}">{{ D }}</option>
+                    <option value="{{ D }}" {% if D == Dept.0 %} selected {% endif %}>{{ D }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -75,15 +73,9 @@
             <label for="Photo">Photo</label>
             <input class="form-control" id="Photo" type="file" name="Photo">
         </div>
-        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        <div class="d-flex justify-content-center ">
+            <button type="submit" class="btn btn-primary mt-3 btn-block btn-lg gradient-custom-4 ">Register</button>
+        </div>
     </form>
 </div>
-{% if photo %}
-        <div class="photo">{{ photo }}</div>
-{% endif %}
 {% endblock main %}
-
-
-
-</body>
-</html>
