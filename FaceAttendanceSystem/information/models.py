@@ -1,36 +1,36 @@
 from django.db import models
 import os
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager,User
 
 # Create your models here.
-class BaseUserManager(BaseUserManager):
-    def create_user(self, phone, name, password=None, **extra_fields):
-        if not phone:
-            raise ValueError('The Phone field must be set')
-        user = self.model(phone=phone, name=name, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+# class BaseUserManager(BaseUserManager):
+#     def create_user(self, phone, name, password=None, **extra_fields):
+#         if not phone:
+#             raise ValueError('The Phone field must be set')
+#         user = self.model(phone=phone, name=name, **extra_fields)
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         return user
 
-    def create_superuser(self, phone, name, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+#     def create_superuser(self, phone, name, password=None, **extra_fields):
+#         extra_fields.setdefault('is_staff', True)
+#         extra_fields.setdefault('is_superuser', True)
 
-        return self.create_user(phone, name, password, **extra_fields)
+#         return self.create_user(phone, name, password, **extra_fields)
 
-class user(AbstractBaseUser, PermissionsMixin):
-    phone = models.CharField(max_length=15, unique=True)
-    name = models.CharField(max_length=50)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+# class user(AbstractBaseUser, PermissionsMixin):
+#     phone = models.CharField(max_length=15, unique=True)
+#     name = models.CharField(max_length=50)
+#     is_active = models.BooleanField(default=True)
+#     is_staff = models.BooleanField(default=False)
 
-    objects = BaseUserManager()
+#     objects = BaseUserManager()
 
-    USERNAME_FIELD = 'phone'
-    REQUIRED_FIELDS = ['name']
+#     USERNAME_FIELD = 'phone'
+#     REQUIRED_FIELDS = ['name']
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
     
 class Subject(models.Model):
     subject = models.CharField(max_length=80)
@@ -71,7 +71,7 @@ class Student(models.Model):
         
         # return the whole path to the file
         return os.path.join("Student", filename)
-    user = models.OneToOneField(user, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null= True)
     RegID = models.CharField(max_length=10)
     Photo = models.FileField(upload_to=wrapper)
     Name = models.CharField(max_length=50)

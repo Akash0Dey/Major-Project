@@ -20,19 +20,42 @@ def Register(request):
     if len(Department.objects.all()) == 0:
         for ob in DEPT:
             Department.objects.get_or_create(department=ob)
-    data = {"Sem": SEM, "Dept": DEPT,}
     if request.method == "POST":
+        data = {"Sem": SEM, "Dept": DEPT,
+            "photo" : request.FILES["Photo"],
+            "RegID":request.POST["regid"],
+            "Name":request.POST["Name"],
+            "DOB":request.POST["Birthday"],
+            "Gender":request.POST["Gender"],
+            "Phone":request.POST["PhoneNumber"],
+            "Email":request.POST["Email"],
+            "semester":request.POST["CurrentSemester"],
+            "department":request.POST["Major"], 
+        }
         try:
-            photo = request.FILES["Photo"]
-            sem = SemToYear.objects.filter(semester=request.POST["CurrentSemester"])[0]
-            dep = Department.objects.filter(department=request.POST["Major"])[0]
-            Student.objects.get_or_create(Photo=photo, RegID=request.POST["regid"], Name=request.POST["Name"], 
+            user = request.user
+            sem = SemToYear.objects.filter(semester=data["semester"])[0]
+            dep = Department.objects.filter(department=data["department"])[0]
+            Student.objects.get_or_create(user=user, Photo=data["photo"], RegID=request.POST["regid"], Name=request.POST["Name"], 
                                               DOB=request.POST["Birthday"], Gender=request.POST["Gender"], Major=dep, Sem=sem, 
                                               Phone=request.POST["PhoneNumber"], Email=request.POST["Email"])
             return render(request, "Register.html", data)
         except KeyError:
             data["warning"] = "Fill up form properly"
-    return render(request, "Register.html", data)
+    else:
+       
+        data = {"Sem": SEM, "Dept": DEPT,
+            "photo" : "",
+            "RegID": "",
+            "Name": "",
+            "DOB": "",
+            "Gender": "Male",
+            "Phone": "",
+            "Email": "",
+            "semester": "1st",
+            "department": "CST", 
+        }
+        return render(request, "Register.html", data)
     # return render(request, "login.html", data)
 
 

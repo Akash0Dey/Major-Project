@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Subject, Student, SemToYear, SessionYear, Department, user
+from .models import Subject, Student, SemToYear, SessionYear, Department
 # from django.contrib.admin.models import LogEntry
 
 # class LogEntryAdmin(admin.ModelAdmin):
