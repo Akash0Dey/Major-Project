@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Subject, Student, SemToYear, SessionYear, Department
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-import os
+from django.contrib.auth.models import User
 
 # Create your views here.
 SEM = ["1st", "2nd", "3rd", "4th", "5th", "6th"]
@@ -12,7 +12,7 @@ DEPT = ["CST", "EE", "ME", "ETC"]
 
 
 # @login_required
-def Register(request):
+def register(request):
 
     if len(SemToYear.objects.all()) == 0:
         for ob in zip(YEAR, SEM):
@@ -59,23 +59,46 @@ def Register(request):
     # return render(request, "login.html", data)
 
 
+def signup(request):
+    data={}
+    if request.method=='POST':
+        userid = request.POST['user']
+        password = request.POST['password']
+        repeatPassword = request.POST['repeatPassword']
+        if userid == '':
+            data['warning'] = 'Please fill User id'
+        elif password == '':
+            data['warning'] = 'Please fill password'
+        elif password != repeatPassword : 
+            data['warning'] = 'Both password don\'t match'
+
+        else:
+            if User.objects.filter(username=userid).exists():
+                data["warning"] = "User Name already Exist"
+            else:
+                user = User.objects.create_user(username=userid, password=password)
+                login(request, user)
+            return redirect('register')
+    return render(request, 'signup.html', data)
+
+
 def Login(request):
     data={}
     if request.method=='POST':
-        data['userid']=request.POST['userid']
-        data['password']=request.POST['password']
-        if request.POST['userid'] == '':
-            data['warning1'] = 'Please fill User id'
-        elif request.POST['password'] == '':
-            data['warning2'] = 'Please fill password'
-        # else:
-        #     with connection.cursor() as c:
-        #         c.execute("SELECT id FROM user where userid = %s and binary(password) = binary(%s)",[request.POST['userid'], request.POST['password']])
-        #         d = c.fetchone()[0]
-        #         if d is None:
-        #             data['error']='No Data found'
-        #             return render(request, 'login.html', data)
-        #         else:
-        #             request.session['user']=d
-        #             return render(request, 'index.html', data)
+        userid = request.POST['user']
+        password = request.POST['password']
+        if userid == '':
+            data['warning'] = 'Please fill User id'
+        elif password == '':
+            data['warning'] = 'Please fill password'
+        else:
+            user = authenticate(request, username=userid, password=password)
+
+        
+            if user is None:
+                data['warniing']='UserName or Password is wrong'
+                return render(request, 'login.html', data)
+            else:
+                login(request, user)
+                return redirect('register')
     return render(request, 'login.html', data)

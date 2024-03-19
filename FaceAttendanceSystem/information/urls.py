@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib import admin
 from . import views
 
 urlpatterns = [
@@ -9,6 +8,7 @@ urlpatterns = [
     # path('/', include("Data.urls"), name="index"),
     # path('Attendance/', include("Attendance.urls"), name="Attendance"),
     # path('Past Class/', include("PastClass.urls"), name="PastClass"),
-    path('Register/', views.Register, name="Register"),
-    path('login/', views.Login, name="Login"),
+    path('register/', views.register, name="register"),
+    path('login/', views.Login, name="login"),
+    path('signup/', views.signup, name="signup"),
 ]
