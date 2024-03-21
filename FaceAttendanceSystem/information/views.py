@@ -20,9 +20,27 @@ def register(request):
     if len(Department.objects.all()) == 0:
         for ob in DEPT:
             Department.objects.get_or_create(department=ob)
-    if request.method == "POST":
+    user = request.user
+    if Student.objects.filter(user=user).exists():
+        st = Student.objects.filter(user=user)[0]
         data = {"Sem": SEM, "Dept": DEPT,
-            "photo" : request.FILES["Photo"],
+            "Photo" : "",
+            "RegID": st.RegID,
+            "Name": st.Name,
+            "DOB": st.DOB,
+            "Gender": st.Gender,
+            "Phone": st.Phone,
+            "Email": st.Email,
+            "semester": st.Sem.semester,
+            "department": st.Major.department,
+        }
+    if request.method == "POST":
+        if Student.objects.filter(user=user).exists():
+            if request.POST["mode"] == "view":
+                data["editmode"] = True
+                return render(request, "Register.html", data)
+        data = {"Sem": SEM, "Dept": DEPT,
+            "Photo" : request.FILES["Photo"],
             "RegID":request.POST["regid"],
             "Name":request.POST["Name"],
             "DOB":request.POST["Birthday"],
@@ -33,28 +51,29 @@ def register(request):
             "department":request.POST["Major"], 
         }
         try:
-            user = request.user
             sem = SemToYear.objects.filter(semester=data["semester"])[0]
             dep = Department.objects.filter(department=data["department"])[0]
-            Student.objects.get_or_create(user=user, Photo=data["photo"], RegID=request.POST["regid"], Name=request.POST["Name"], 
+            Student.objects.get_or_create(user=user, Photo= request.FILES["Photo"], RegID=request.POST["regid"], Name=request.POST["Name"], 
                                               DOB=request.POST["Birthday"], Gender=request.POST["Gender"], Major=dep, Sem=sem, 
                                               Phone=request.POST["PhoneNumber"], Email=request.POST["Email"])
-            return render(request, "Register.html", data)
         except KeyError:
             data["warning"] = "Fill up form properly"
+        return render(request, "Register.html", data)  # Redirect
     else:
-       
-        data = {"Sem": SEM, "Dept": DEPT,
-            "photo" : "",
-            "RegID": "",
-            "Name": "",
-            "DOB": "",
-            "Gender": "Male",
-            "Phone": "",
-            "Email": "",
-            "semester": "1st",
-            "department": "CST", 
-        }
+        if Student.objects.filter(user=user).exists():
+            data["viewmode"] = True
+        else:
+            data = {"Sem": SEM, "Dept": DEPT,
+                "Photo" : "",
+                "RegID": "",
+                "Name": "",
+                "DOB": "",
+                "Gender": "Male",
+                "Phone": "",
+                "Email": "",
+                "semester": "1st",
+                "department": "CST", 
+            }
         return render(request, "Register.html", data)
     # return render(request, "login.html", data)
 
