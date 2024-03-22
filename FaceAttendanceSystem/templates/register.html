@@ -72,21 +72,23 @@
                         </select>
                     </div>
                 </div>
+                {% if viewmode %}
+                <div class="d-flex justify-content-center ">
+                    <input type="hidden" name="mode" value="view">
+                    <button type="submit" class="btn btn-primary mt-3 btn-block btn-lg gradient-custom-4 ">Edit</button>
+                    {% elif editmode %}
+                <div class="d-flex justify-content-center ">
+                    <input type="hidden" name="mode" value="Edit">
+                    <button type="submit" class="btn btn-primary mt-3 btn-block btn-lg gradient-custom-4 ">Save</button>
+                {% else %}
                 <div class="row col-md-12 mt-md-0 mt-3">
                     <label for="Photo">Photo</label>
                     <input class="form-control" id="Photo" type="file" name="Photo" value="{{ Photo }}">
                 </div>
                 <div class="d-flex justify-content-center ">
-                    {% if viewmode %}
-                    <input type="hidden" name="mode" value="view">
-                    <button type="submit" class="btn btn-primary mt-3 btn-block btn-lg gradient-custom-4 ">Edit</button>
-                    {% elif editmode %}
-                    <input type="hidden" name="mode" value="Edit">
-                    <button type="submit" class="btn btn-primary mt-3 btn-block btn-lg gradient-custom-4 ">Save</button>
-                    {% else %}
                     <input type="hidden" name="mode" value="New">
                     <button type="submit" class="btn btn-primary mt-3 btn-block btn-lg gradient-custom-4 ">Register</button>
-                    {% endif %}
+                {% endif %}
                 </div>
             </div>
         </form>
