@@ -13,8 +13,8 @@ DEPT = ["CST", "EE", "ME", "ETC"]
 
 def home(request):
     data = {}
-    if "user" in request.session:
-        data = {"register": Student.objects.filter(user=request.user)[0]}
+    if request.user.is_authenticated:
+        data = {"register": Student.objects.filter(user=request.user).first()}
     return render(request, "index.html", data)
 
 # def register(request):
@@ -95,8 +95,8 @@ def home(request):
 
 def register(request):
     # Ensure user is authenticated
-    # if "user" not in request.session:
-    #     return redirect('login')  # Redirect to login page if user is not authenticated
+    if not request.user.is_authenticated:
+        return redirect('login') # Redirect to login page if user is not authenticated
 
     # Check if necessary tables exist and create them if not
     if SemToYear.objects.count() == 0:
@@ -106,10 +106,9 @@ def register(request):
         for dept in DEPT:
             Department.objects.create(department=dept)
 
-    user = request.user
 
     # Check if student already exists for the user
-    student = Student.objects.filter(user=user).first()
+    student = Student.objects.filter(user=request.user).first()
 
     if request.method == "POST":
         form_data = request.POST
@@ -140,7 +139,7 @@ def register(request):
 
             # If student already exists, update the details
             if student:
-                photo = form_files.get("Photo", student.Photo)
+                photo = form_files.get("Photo")
                 student.Photo =photo if photo else student.Photo
                 student.RegID = form_data["regid"]
                 student.Name = form_data["Name"]
@@ -154,7 +153,7 @@ def register(request):
             else:
                 # Otherwise, create a new student record
                 Student.objects.create(
-                    user=user,
+                    user=request.user,
                     Photo=form_files.get("Photo"),
                     RegID=form_data["regid"],
                     Name=form_data["Name"],
@@ -188,7 +187,7 @@ def register(request):
     return render(request, "Register.html", data)
 
 def signup(request):
-    if 'user' in request.session:
+    if request.user.is_authenticated:
         return redirect('home')
     data={}
     if request.method=='POST':
@@ -214,7 +213,7 @@ def signup(request):
 
 
 def Login(request):
-    if 'user' in request.session:
+    if request.user.is_authenticated:
         return redirect('home')
     data={}
     if request.method=='POST':
@@ -237,6 +236,6 @@ def Login(request):
     return render(request, 'login.html', data)
 
 def Logout(request):
-    if 'user' in request.session:
+    if request.user.is_authenticated:
         logout(request)
     return redirect("login")

@@ -26,7 +26,7 @@
         <!-- Add other permanent navbar items here -->
         
         <!-- Conditional navbar items based on user authentication -->
-        {% if 'user' in request.session %}
+        {% if request.user.is_authenticated %}
           <li class="nav-item {% if request.path == '/registration/' %}active{% endif %}">
             <a class="nav-link" href="/registration/">Register</a>
           </li>
