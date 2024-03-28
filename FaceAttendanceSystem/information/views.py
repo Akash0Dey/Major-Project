@@ -17,6 +17,12 @@ def home(request):
         data = {"register": Student.objects.filter(user=request.user).first()}
     return render(request, "index.html", data)
 
+def profile(request):
+    data = {}
+    if request.user.is_authenticated:
+        data = {"register": Student.objects.filter(user=request.user).first()}
+    return render(request, "profile.html", data)
+
 # def register(request):
 
 #     # if semToYear and Department table don't exist create it
@@ -129,7 +135,7 @@ def register(request):
                 "semester": student.Sem.semester,
                 "department": student.Major.department,
             }
-            return render(request, "Register.html", data)
+            return render(request, "register.html", data)
 
         # Handle new student registration or updating existing details
         try:
@@ -184,7 +190,7 @@ def register(request):
             "department": student.Major.department if student else "CST",
             "viewmode": bool(student),
         }
-    return render(request, "Register.html", data)
+    return render(request, "register.html", data)
 
 def signup(request):
     if request.user.is_authenticated:
@@ -205,7 +211,8 @@ def signup(request):
             if User.objects.filter(username=userid).exists():
                 data["warning"] = "User Name already Exist"
             else:
-                user = authenticate(request, username=userid, password=password)
+                user = User.objects.create_user(username=userid, password=password)
+                # user = authenticate(request, username=userid, password=password)
                 login(request, user)
                 request.session.set_expiry(0)
                 return redirect('register')

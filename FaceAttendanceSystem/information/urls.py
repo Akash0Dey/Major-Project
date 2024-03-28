@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.home, name="home"),
     # path('Attendance/', include("Attendance.urls"), name="Attendance"),
     # path('Past Class/', include("PastClass.urls"), name="PastClass"),
+    path('profile_details/', views.profile, name="profile"),
     path('registration/', views.register, name="register"),
     path('login/', views.Login, name="login"),
     path('logout/', views.Logout, name="logout"),
